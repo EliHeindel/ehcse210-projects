@@ -1,0 +1,40 @@
+public class Entry
+{
+   public static void Main()
+   {
+      Random random = new Random();
+        string[] value1 = {
+            "What was the best thing that happened to you today?",
+            "Where do I see myself in 5 years?",
+            "What do I love most about my family",
+            "What was something you learned today?",
+            "What do you think you are missing in life?";
+        string[] value = value1;
+
+
+        // Generate random indexes for journalQuestions.
+        int mIndex = random.Next(value.Length);
+
+      // Display the result.
+      Console.Write(value[mIndex]);
+      string eJournal = Console.ReadLine();
+     
+      Console.WriteLine($"{value[mIndex]}{eJournal}");
+     string eJournalCombine = Console.ReadLine();
+    string currentDate1 = DateTime.Now.ToString("MM/dd/yyyy");
+
+Console.Write("What is the file name: ");
+string fileInput = Console.ReadLine();
+string fileName = fileInput;
+
+using (StreamWriter outputFile = new StreamWriter(fileName))
+{
+ 
+    outputFile.WriteLine("This will be the first line in the file.");
+ 
+
+    outputFile.WriteLine($" {currentDate1} {eJournalCombine}");
+}
+     
+   }
+}
