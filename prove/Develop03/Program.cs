@@ -3,72 +3,81 @@ using System.Linq;
 
 namespace ScriptureApp
 {
-    class Program
+   class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        var scripture = new Scripture("2 Nephi 2:27", "Men are free to choose liberty and eternal life, or to choose captivity and death.");
+        var consoleManager = new ConsoleManager();
+        
+        while (!scripture.IsFullyHidden)
         {
-            Scripture scripture = new Scripture("2 Nephi 2:27", "And it must needs be that the devil should tempt the children of men, or they must become devilish.");
+            consoleManager.Clear();
+            consoleManager.WriteLine(scripture.GetHiddenText());
+            consoleManager.WriteLine("Press enter to reveal more words, or type quit to exit.");
 
-            scripture.Display();
-            while (scripture.HasHiddenWords())
+            var input = consoleManager.ReadLine().Trim().ToLower();
+
+            if (input == "quit")
             {
-                Console.WriteLine("Press enter to hide more words or type 'quit' to end the program: ");
-                string userInput = Console.ReadLine();
-                if (userInput == "quit")
-                {
-                    break;
-                }
-                scripture.HideWords();
-                scripture.Display();
+                break;
             }
 
-            Console.WriteLine("Congratulations! You have successfully hidden all words in the scripture.");
+            scripture.HideNextWord();
         }
-    }
 
-    class Scripture
+        consoleManager.Clear();
+        consoleManager.WriteLine("Congratulations! You have successfully hidden all the words.");
+    }
+}
+
+class Scripture
+{
+    private List<Word> words;
+    private int nextWordIndex;
+
+    public Scripture(string reference, string text)
     {
-        private string reference;
-        private string text;
-        private bool[] hiddenWords;
+        Reference = reference;
+        words = text.Split(' ').Select(w => new Word(w)).ToList();
+    }
 
-        public Scripture(string reference, string text)
-        {
-            this.reference = reference;
-            this.text = text;
-            this.hiddenWords = Enumerable.Repeat(false, text.Split(' ').Length).ToArray();
-        }
+    public string Reference { get; }
 
-        public bool HasHiddenWords()
-        {
-            return this.hiddenWords.Contains(false);
-        }
+    public bool IsFullyHidden => nextWordIndex >= words.Count;
 
-        public void HideWords()
-        {
-            Random random = new Random();
-            int hiddenWordIndex = random.Next(0, this.text.Split(' ').Length);
-            this.hiddenWords[hiddenWordIndex] = true;
-        }
+    public string GetHiddenText() => string.Join(" ", words.Select(w => w.IsHidden ? "_" : w.Value));
 
-        public void Display()
+    public void HideNextWord()
+    {
+        if (!IsFullyHidden)
         {
-            Console.Clear();
-            string[] words = this.text.Split(' ');
-            Console.WriteLine("Scripture: " + this.reference);
-            Console.WriteLine("");
-            for (int i = 0; i < words.Length; i++)
-            {
-                if (!this.hiddenWords[i])
-                {
-                    Console.Write(words[i] + " ");
-                }
-                else
-                {
-                    Console.Write("_ ");
-                }
-            }
-            Console.WriteLine("");
+            words[nextWordIndex].Hide();
+            nextWordIndex++;
         }
     }
+}
+
+class Word
+{
+    public Word(string value)
+    {
+        Value = value;
+    }
+
+    public string Value { get; }
+    public bool IsHidden { get; private set; }
+
+    public void Hide()
+    {
+        IsHidden = true;
+    }
+}
+
+class ConsoleManager
+{
+    public void Clear() => Console.Clear();
+    public void WriteLine(string text) => Console.WriteLine(text);
+    public string ReadLine() => Console.ReadLine();
+}
 }
