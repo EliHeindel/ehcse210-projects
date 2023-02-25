@@ -1,10 +1,8 @@
 using System
+
 class ListingActivity : Activity
 {
-    private static Random random = new Random();
-
-    private static List<string> prompts = new List<string>
-    {
+    private List<string> prompts = new List<string>() {
         "Who are people that you appreciate?",
         "What are personal strengths of yours?",
         "Who are people that you have helped this week?",
@@ -16,22 +14,23 @@ class ListingActivity : Activity
 
     protected override void RunActivity()
     {
-        int itemsCount = 0;
-        Console.WriteLine(prompts[random.Next(prompts.Count)]);
-        Pause(3);
-
         DateTime endTime = DateTime.Now.AddSeconds(duration);
+        Random rand = new Random();
+        string prompt = prompts[rand.Next(prompts.Count)];
+        Console.WriteLine(prompt);
+        Console.WriteLine("Starting in...");
+        Countdown(5);
+        Console.WriteLine("Begin listing...");
+        int count = 0;
         while (DateTime.Now < endTime)
         {
-            Console.Write("Enter an item: ");
-            string input = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(input))
+            string item = Console.ReadLine();
+            if (string.IsNullOrEmpty(item))
             {
                 break;
             }
-            itemsCount++;
+            count++;
         }
-
-        Console.WriteLine($"You listed {itemsCount} items.");
+        Console.WriteLine($"You listed {count} items.");
     }
 }
