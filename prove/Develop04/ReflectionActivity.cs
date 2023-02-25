@@ -2,18 +2,13 @@ using System;
 
 class ReflectionActivity : Activity
 {
-    private static Random random = new Random();
-
-    private static List<string> prompts = new List<string>
-    {
+    private List<string> prompts = new List<string>() {
         "Think of a time when you stood up for someone else.",
         "Think of a time when you did something really difficult.",
         "Think of a time when you helped someone in need.",
         "Think of a time when you did something truly selfless."
     };
-
-    private static List<string> questions = new List<string>
-    {
+    private List<string> questions = new List<string>() {
         "Why was this experience meaningful to you?",
         "Have you ever done anything like this before?",
         "How did you get started?",
@@ -29,19 +24,16 @@ class ReflectionActivity : Activity
 
     protected override void RunActivity()
     {
-        for (int i = 0; i < duration;)
+        DateTime endTime = DateTime.Now.AddSeconds(duration);
+        Random rand = new Random();
+        string prompt = prompts[rand.Next(prompts.Count)];
+        Console.WriteLine(prompt);
+
+        while (DateTime.Now < endTime)
         {
-            string prompt = prompts[random.Next(prompts.Count)];
-            Console.WriteLine(prompt);
-            Pause(3);
-
-            foreach (string question in questions)
-            {
-                Console.WriteLine(question);
-                Pause(3);
-            }
-
-            i += (questions.Count + 1) * 3;
+            string question = questions[rand.Next(questions.Count)];
+            Console.WriteLine(question);
+            Pause(5);
         }
     }
 }
