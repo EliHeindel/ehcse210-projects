@@ -1,8 +1,8 @@
 using System;
 
-namespace MindfulnessApp
+namespace MindfulActivities
 {
-    public abstract class Activity
+    abstract class Activity
     {
         protected string name;
         protected string description;
@@ -16,35 +16,27 @@ namespace MindfulnessApp
 
         public void Start()
         {
-            Console.WriteLine($"\n{name} Activity");
+            Console.WriteLine("\n" + name);
             Console.WriteLine(description);
 
-            duration = GetDuration();
+            while (true)
+            {
+                Console.Write("\nEnter the duration in seconds (minimum 10 seconds): ");
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out duration) && duration >= 10)
+                {
+                    break;
+                }
+            }
 
-            Console.WriteLine($"\nPrepare to begin in 3 seconds.");
-            Countdown(3);
+            Console.WriteLine("\nGet ready to begin in:");
+            CountDown(3);
 
             RunActivity();
 
-            Console.WriteLine($"\nGood job! You have completed the {name} activity for {duration} seconds.");
-            Console.WriteLine("Take some time to relax and clear your mind.");
+            Console.WriteLine("\nGreat job! You have completed the " + name + " activity for " + duration + " seconds.");
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
-        }
-
-        protected int GetDuration()
-        {
-            Console.WriteLine("\nPlease enter the duration of the activity in seconds:");
-            string input = Console.ReadLine();
-
-            int duration;
-            if (!int.TryParse(input, out duration) || duration <= 0)
-            {
-                Console.WriteLine("Invalid input. Duration must be a positive integer.");
-                return GetDuration();
-            }
-
-            return duration;
         }
 
         protected void Pause(int seconds)
@@ -54,13 +46,14 @@ namespace MindfulnessApp
                 Console.Write(".");
                 System.Threading.Thread.Sleep(1000);
             }
+            Console.WriteLine();
         }
 
-        protected void Countdown(int seconds)
+        protected void CountDown(int seconds)
         {
             for (int i = seconds; i > 0; i--)
             {
-                Console.Write($"{i}...");
+                Console.WriteLine(i);
                 System.Threading.Thread.Sleep(1000);
             }
             Console.WriteLine("Go!");
